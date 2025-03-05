@@ -3,9 +3,11 @@ package com.nl.recipe_management_api.service;
 import com.nl.recipe_management_api.entity.Ingredient;
 import com.nl.recipe_management_api.entity.Recipe;
 import com.nl.recipe_management_api.exception.DuplicateRecipeException;
+import com.nl.recipe_management_api.exception.RecipeNotFoundException;
 import com.nl.recipe_management_api.mapper.RecipeMapper;
 import com.nl.recipe_management_api.model.RecipeDetails;
 import com.nl.recipe_management_api.model.RecipeFilterRequest;
+import com.nl.recipe_management_api.model.RecipeIngredient;
 import com.nl.recipe_management_api.repository.RecipeManagementRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -61,8 +63,7 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
 
     @Override
     public void deleteRecipe(String recipeName){
-       Recipe recipe = recipeManagementRepository.findByRecipeName(recipeName).orElseThrow(()-> new RuntimeException("No recipe found with the name"));
-       recipeManagementRepository.deleteById(recipe.getId());
+       recipeManagementRepository.deleteById(getRecipeByName(recipeName).getId());
     }
 
     @Override
@@ -74,8 +75,29 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
                 .collect(Collectors.toList());
     }
 
-    private Set<Ingredient> getDistinctIngredients(Set<Ingredient> ingredients, Set<Ingredient> newIngredients) {
-        return new LinkedHashSet<>(Stream.of(ingredients, newIngredients)
+    @Override
+    public List<RecipeDetails> getAllRecipes(){
+        List<Recipe> recipes  = recipeManagementRepository.findAll();
+        return recipes.stream()
+                .map(recipe -> RecipeMapper.INSTANCE.fromRecipe(recipe))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RecipeDetails getRecipe(String recipeName){
+        return RecipeMapper.INSTANCE.fromRecipe(getRecipeByName(recipeName));
+    }
+
+    private Recipe getRecipeByName(String name){
+        return recipeManagementRepository.findByRecipeName(name)
+                .orElseThrow(()->new RecipeNotFoundException("No Recipe found with the name: "+name));
+    }
+
+    private Set<Ingredient> getDistinctIngredients(Set<Ingredient> ingredients, Set<RecipeIngredient> newIngredients) {
+        Set<Ingredient> newIngredientSet = newIngredients.stream()
+                .map(recipeIngredient -> new Ingredient(recipeIngredient.getId(),recipeIngredient.getName()))
+                .collect(Collectors.toSet());
+        return new LinkedHashSet<>(Stream.of(ingredients, newIngredientSet)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Ingredient::getName)))));
     }

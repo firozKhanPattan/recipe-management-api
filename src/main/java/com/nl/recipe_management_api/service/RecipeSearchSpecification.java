@@ -30,7 +30,7 @@ public class RecipeSearchSpecification {
                 Join<Recipe, Ingredient> includeIngredientsJoin = root.join("ingredients");
                 predicate = criteriaBuilder.and(predicate,criteriaBuilder.equal(includeIngredientsJoin.get("name"),recipeFilterRequest.getIncludesIngredient()));
             }
-            if(null!=recipeFilterRequest.getExcludesIngredient() && !recipeFilterRequest.getExcludesIngredient().isEmpty()){}{
+            if(null!=recipeFilterRequest.getExcludesIngredient() && !recipeFilterRequest.getExcludesIngredient().isEmpty()){
                 Subquery<Long> subquery = query.subquery(Long.class);
                 Root<Recipe> subRoot = subquery.from(Recipe.class);
                 Join<Recipe,Ingredient> excludeIngredientsJoin = subRoot.join("ingredients");
@@ -40,7 +40,7 @@ public class RecipeSearchSpecification {
             }
             if(null!=recipeFilterRequest.getInstruction() && !recipeFilterRequest.getInstruction().isEmpty()){
                 predicate = criteriaBuilder.and(predicate,criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("instructions")), "'%"+recipeFilterRequest.getInstruction().toLowerCase()+"%"));
+                        criteriaBuilder.lower(root.get("instructions")), "%"+recipeFilterRequest.getInstruction().toLowerCase()+"%"));
             }
             return  predicate;
         };

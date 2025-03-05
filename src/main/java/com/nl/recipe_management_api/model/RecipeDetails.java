@@ -5,6 +5,7 @@ import com.nl.recipe_management_api.enums.Category;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RecipeDetails {
 
     private Long id;
@@ -21,7 +23,7 @@ public class RecipeDetails {
     @NotNull(message = "Recipe name cannot be null")
     private String recipeName;
 
-    @NotEmpty(message = "Please enter a valid Category")
+    @NotNull(message = "Please enter a valid Category")
     private Category category;
 
     private String instructions;
@@ -29,5 +31,5 @@ public class RecipeDetails {
     private int servings;
 
     @NotEmpty(message="Ingredients list cannot be empty")
-    private Set<Ingredient> ingredients;
+    private Set<RecipeIngredient> ingredients;
 }

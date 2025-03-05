@@ -14,4 +14,8 @@ public interface RecipeManagementService {
     void deleteRecipe(String recipeName);
 
     List<RecipeDetails> filterRecipes(RecipeFilterRequest recipeFilterRequest);
+
+    List<RecipeDetails> getAllRecipes();
+
+    RecipeDetails getRecipe(String recipeName);
 }

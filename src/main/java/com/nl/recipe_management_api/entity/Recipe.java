@@ -28,7 +28,7 @@ public class Recipe {
     @Column(nullable = false,unique = true)
     private String recipeName;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     private String instructions;
