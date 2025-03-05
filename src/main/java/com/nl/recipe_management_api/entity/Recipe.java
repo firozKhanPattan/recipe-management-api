@@ -28,10 +28,13 @@ public class Recipe {
     @Column(nullable = false,unique = true)
     private String recipeName;
 
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
+
     private String instructions;
+
 
     private int servings;
 

@@ -1,5 +1,6 @@
 package com.nl.recipe_management_api.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,5 +18,6 @@ public class Ingredient {
    @GeneratedValue
    private Long id;
 
+  /* @Column(name = "name")*/
    private String name;
 }

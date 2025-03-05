@@ -67,7 +67,7 @@ class RecipeManagementControllerTest {
     void getRecipe() throws Exception {
         when(recipeManagementService.getRecipe(any(String.class))).thenReturn(recipeDetails);
         mockMvc.perform(get("/recipe/kip suate"))
-                .andExpect(status().isFound())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.recipeName").value(recipeDetails.getRecipeName()));
     }
 
@@ -95,7 +95,7 @@ class RecipeManagementControllerTest {
     @Test
     @DisplayName("GIVEN a request to delete a Recipe THEN deletes a recipe")
     void deleteRecipe() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/recipe/kip suate"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/recipe/232"))
                 .andExpect(status().isOk());
 
     }

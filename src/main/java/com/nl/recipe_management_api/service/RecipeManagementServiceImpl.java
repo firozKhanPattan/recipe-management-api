@@ -33,7 +33,7 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
 
     @Override
     public RecipeDetails createRecipe(RecipeDetails recipeDetails){
-        Optional<Recipe> recipe = recipeManagementRepository.findByRecipeName(recipeDetails.getRecipeName());
+        Optional<Recipe> recipe = recipeManagementRepository.findByRecipeName(recipeDetails.getRecipeName().trim().toLowerCase());
         if(recipe.isPresent() && recipeDetails.getRecipeName().equalsIgnoreCase(recipe.get().getRecipeName())){
             throw new DuplicateRecipeException("Recipe already exists with the name: "+recipeDetails.getRecipeName());
         }
@@ -44,12 +44,11 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
 
     @Override
     public RecipeDetails updateRecipe(RecipeDetails newRecipeDetails){
-        Optional<Recipe> recipe = recipeManagementRepository.findByRecipeName(newRecipeDetails.getRecipeName());
+        Optional<Recipe> recipe = recipeManagementRepository.findByRecipeName(newRecipeDetails.getRecipeName().trim().toLowerCase());
         if(recipe.isPresent()){
             Recipe recipeTobeUpdated = recipe.get();
             if(!CollectionUtils.isEmpty(newRecipeDetails.getIngredients())){
-                recipeTobeUpdated.getIngredients()
-                        .addAll(getDistinctIngredients(recipeTobeUpdated.getIngredients(),newRecipeDetails.getIngredients()));
+                recipeTobeUpdated.setIngredients(getDistinctIngredients(recipeTobeUpdated.getIngredients(),newRecipeDetails.getIngredients()));
             }
             recipeTobeUpdated.setCategory(Optional.ofNullable(newRecipeDetails.getCategory()).orElse(recipeTobeUpdated.getCategory()));
             recipeTobeUpdated.setInstructions(Optional.ofNullable(newRecipeDetails.getInstructions()).orElse(recipeTobeUpdated.getInstructions()));
@@ -62,8 +61,9 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
     }
 
     @Override
-    public void deleteRecipe(String recipeName){
-       recipeManagementRepository.deleteById(getRecipeByName(recipeName).getId());
+    public void deleteRecipe(Long recipeId){
+        recipeManagementRepository.findById(recipeId).orElseThrow(()-> new RecipeNotFoundException("Recipe not found with id: "+recipeId));
+        recipeManagementRepository.deleteById(recipeId);
     }
 
     @Override

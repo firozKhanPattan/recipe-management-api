@@ -1,5 +1,6 @@
 package com.nl.recipe_management_api.controller;
 
+import com.nl.recipe_management_api.exception.RecipeManagementException;
 import com.nl.recipe_management_api.model.RecipeDetails;
 import com.nl.recipe_management_api.model.RecipeFilterRequest;
 import com.nl.recipe_management_api.service.RecipeManagementService;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +37,7 @@ public class RecipeManagementController {
     @PutMapping(path = "/recipe" , consumes = "application/json", produces = "application/json" )
     public  ResponseEntity updateRecipe(@NotNull @RequestBody final RecipeDetails newRecipeDetails){
         RecipeDetails updatedRecipe = recipeManagementService.updateRecipe(newRecipeDetails);
-        return new ResponseEntity<>("Recipe updated Succesasfully",HttpStatus.OK);
+        return new ResponseEntity<>("Recipe updated Successfully",HttpStatus.OK);
     }
 
     @GetMapping(path="/recipes", produces = "application/json")
@@ -46,18 +48,21 @@ public class RecipeManagementController {
 
     @GetMapping(path ="/recipe/{recipeName}" , produces = "application/json")
     public ResponseEntity<RecipeDetails> getRecipe(@NotBlank @PathVariable("recipeName") final String recipeName){
-        return new ResponseEntity<>(recipeManagementService.getRecipe(recipeName),HttpStatus.FOUND);
+        return new ResponseEntity<>(recipeManagementService.getRecipe(recipeName),HttpStatus.OK);
     }
 
 
-    @DeleteMapping(path ="/recipe/{recipeName}", produces = "application/json")
-    public ResponseEntity deleteRecipe(@NonNull @PathVariable("recipeName") final String recipeName){
-        recipeManagementService.deleteRecipe(recipeName);
+    @DeleteMapping(path ="/recipe/{recipeId}", produces = "application/json")
+    public ResponseEntity deleteRecipe(@NonNull @PathVariable("recipeId") final Long recipeId){
+        recipeManagementService.deleteRecipe(recipeId);
         return new ResponseEntity<>("Recipe deleted successfully",HttpStatus.OK);
     }
 
     @PostMapping(path ="/recipe/search", produces = "application/json")
     public ResponseEntity<List<RecipeDetails>> filterRecipes(@RequestBody @NonNull final RecipeFilterRequest recipeFilterRequest){
+        if(ObjectUtils.allNull()){
+            throw new RecipeManagementException("Please provide at least one search criteria");
+        }
         List<RecipeDetails> recipes = recipeManagementService.filterRecipes(recipeFilterRequest);
         return new ResponseEntity<>(recipes,HttpStatus.OK);
     }
