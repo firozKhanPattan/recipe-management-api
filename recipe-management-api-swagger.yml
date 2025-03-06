@@ -1,0 +1,204 @@
+---
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  "/recipe/{id}":
+    put:
+      tags:
+        - recipe-management-controller
+      summary: Update a Recipe
+      description: Updates an existing Recipe details.
+      operationId: updateRecipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeDetails"
+        required: true
+      responses:
+        "200":
+          description: Recipe updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+        "404":
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+  /recipe:
+    post:
+      tags:
+        - recipe-management-controller
+      summary: Create a new recipe
+      description: "Adds a new recipe to the system with category.Allowed Categories:
+        VEGETARIAN,NON_VEGETARIAN,VEGAN"
+      operationId: addRecipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeDetails"
+        required: true
+      responses:
+        "201":
+          description: Recipe created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+  /recipe/search:
+    post:
+      tags:
+        - recipe-management-controller
+      summary: Search for recipes based on criteria recipe
+      description: "Search can be combination of
+        servings,category,includesIngredient,excludesIngredientAllowed
+        Categories: VEGETARIAN,NON_VEGETARIAN,VEGAN"
+      operationId: filterRecipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeFilterRequest"
+        required: true
+      responses:
+        "200":
+          description: Recipes retrieved successfully based on the criteria
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+  /recipes:
+    get:
+      tags:
+        - recipe-management-controller
+      summary: Get all Recipes
+      description: Retrieves all available recipes in the system.
+      operationId: getAllRecipes
+      responses:
+        "200":
+          description: Recipes retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+  "/recipe/{recipeName}":
+    get:
+      tags:
+        - recipe-management-controller
+      summary: Get Recipe by name
+      description: Retrieves a specific recipe based on its name.
+      operationId: getRecipe
+      parameters:
+        - name: recipeName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Recipe found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+        "404":
+          description: Recipe not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeDetails"
+  "/recipe/{recipeId}":
+    delete:
+      tags:
+        - recipe-management-controller
+      summary: Delete a recipe
+      description: Removes a recipe from the system.
+      operationId: deleteRecipe
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Recipe deleted successfully
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    RecipeDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        recipeName:
+          type: string
+        category:
+          type: string
+          description: The Category of the recipe
+          enum:
+            - VEGETARIAN
+            - NON_VEGETARIAN
+            - VEGAN
+          example: VEGETARIAN
+        instructions:
+          type: string
+        servings:
+          type: integer
+          format: int32
+        ingredients:
+          type: array
+          items:
+            $ref: "#/components/schemas/RecipeIngredient"
+          uniqueItems: true
+      required:
+        - ingredients
+        - recipeName
+    RecipeIngredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    RecipeFilterRequest:
+      type: object
+      properties:
+        servings:
+          type: integer
+          format: int32
+        instruction:
+          type: string
+        includesIngredient:
+          type: string
+        excludesIngredient:
+          type: string
+        category:
+          type: string
+          description: Recipe categories available in the system
+          enum:
+            - VEGETARIAN
+            - NON_VEGETARIAN
+            - VEGAN
