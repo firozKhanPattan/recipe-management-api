@@ -2,6 +2,7 @@ package com.nl.recipeManagementAPI.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nl.recipeManagementAPI.enums.Category;
+import com.nl.recipeManagementAPI.exception.RecipeExistsException;
 import com.nl.recipeManagementAPI.exception.RecipeNotFoundException;
 import com.nl.recipeManagementAPI.model.RecipeDetails;
 import com.nl.recipeManagementAPI.model.RecipeFilterRequest;
@@ -61,8 +62,7 @@ class RecipeManagementControllerTest {
         when(recipeManagementService.getAllRecipes()).thenReturn(List.of(recipeDetails));
         mockMvc.perform(get("/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1)
-                );
+                .andExpect(jsonPath("$.length()").value(1));
     }
 
     @Test
@@ -81,6 +81,16 @@ class RecipeManagementControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(recipeDetails)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("createExistingRecipe : GIVEN a request to create an already existing recipe THEN returns status CONFLICT")
+    void createExistingRecipe() throws Exception{
+        when(recipeManagementService.createRecipe(any(RecipeDetails.class))).thenThrow(RecipeExistsException.class);
+        mockMvc.perform(post("/recipe")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(recipeDetails)))
+                .andExpect(status().isConflict());
     }
 
     @Test

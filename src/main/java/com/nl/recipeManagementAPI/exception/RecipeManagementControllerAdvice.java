@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * <h2>Supported Exceptions:</h2>
  * <ul>
  *     <li>MethodArgumentNotValidException - Handles validation errors</li>
- *     <li>RecipeExistsException - </li>
+ *     <li>RecipeExistsException - Handles the creation of an existing recipe</li>
  *     <li>RecipeNotFoundException - Handles missing resources</li>
  *     <li>Generic Exception - Catches all unhandled exceptions</li>
  * </ul>

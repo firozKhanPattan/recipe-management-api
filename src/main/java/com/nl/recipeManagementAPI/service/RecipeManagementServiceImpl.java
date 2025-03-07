@@ -68,7 +68,7 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
         log.info("Update recipe: {},{}", id, newRecipeDetails);
         Optional<Recipe> recipe = recipeManagementRepository.findById(id);
         if (recipe.isPresent()) {
-            log.info("Recipe found,. updating the recipe");
+            log.info("Recipe found, updating the recipe");
             Recipe recipeTobeUpdated = recipe.get();
             if (!CollectionUtils.isEmpty(newRecipeDetails.getIngredients())) {
                 recipeTobeUpdated.setIngredients(getDistinctIngredients(recipeTobeUpdated.getIngredients(), newRecipeDetails.getIngredients()));
@@ -153,5 +153,4 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Ingredient::getName)))));
     }
-
 }

@@ -3,7 +3,7 @@ package com.nl.recipeManagementAPI.exception;
 /**
  * @author Firoz
  *
- * Type DuplicateRecipeException
+ * Type RecipeExistsException
  *
  * thrown when a user tries to add am already existing recipe with the same name.
  */

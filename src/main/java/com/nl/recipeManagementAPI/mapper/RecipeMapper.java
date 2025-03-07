@@ -7,6 +7,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author Firoz
+ *
+ * Type RecipeMapper Hnadles the entity to dto and dto to entity mappings
+ *
+ */
 @Mapper
 @Service
 public interface RecipeMapper {

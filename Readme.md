@@ -49,7 +49,7 @@ http://localhost:8080/actuator/health
 * The schema information can be found in recipe-management-api-swagger.yml
 * For sample requests, please refer RecipeManagement.postman_collection.json
 * Please refer to the below screen shot for code coverage reference
-* ![img_1.png](img_1.png)
+* ![img_2.png](img_2.png)
 ## Authors
  Firoz Pattan
 

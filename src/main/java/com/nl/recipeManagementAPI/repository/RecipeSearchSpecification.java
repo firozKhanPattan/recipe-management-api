@@ -18,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
  * Type RecipeSearchSpecification
  * <p>
  * builds custom specifications based on the filter criteria provided.
+ * creates a predicate based on the filter request like category, includes ingredient, excludes ingredient,
+ * servings amd in their combinations
  */
 public class RecipeSearchSpecification {
     public static Specification<Recipe> filterByCriteria(RecipeFilterRequest recipeFilterRequest) {

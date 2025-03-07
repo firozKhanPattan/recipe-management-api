@@ -159,7 +159,6 @@ public class RecipeManagementIntegrationTest {
         recipe2.setServings(6);
         recipe2.setInstructions("deep fry in the oil");
         recipe2.setIngredients(Set.of(new Ingredient(null, "potato"), new Ingredient(null, "oil"), new Ingredient(null, "salt")));
-
         return List.of(recipe1, recipe2);
     }
 }
