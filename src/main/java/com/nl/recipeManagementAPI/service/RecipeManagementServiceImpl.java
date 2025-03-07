@@ -57,7 +57,7 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
     }
 
     /**
-     * Updates a Recipe, Gets the existing recipe by id or name and compares the ingredients and other values updates the recipe
+     * Updates a Recipe, Gets the existing recipe by id compares the ingredients and other values updates the recipe
      * with the latest details.
      *
      * @param newRecipeDetails The recipe to be updated.
@@ -91,9 +91,9 @@ public class RecipeManagementServiceImpl implements RecipeManagementService {
      */
     @Override
     public void deleteRecipe(Long recipeId) {
-        log.info("delete recipe" + recipeId);
         recipeManagementRepository.findById(recipeId).orElseThrow(() -> new RecipeNotFoundException("Recipe not found with id: " + recipeId));
         recipeManagementRepository.deleteById(recipeId);
+        log.info("delete recipe" + recipeId);
     }
 
     /**
