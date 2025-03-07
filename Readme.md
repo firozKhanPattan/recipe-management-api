@@ -29,6 +29,7 @@ To run this api,
 
 ### Installing
 Clone the api from the below link
+https://github.com/firozKhanPattan/recipe-management-api.git
 
 ### Executing the program
 
