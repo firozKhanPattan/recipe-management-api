@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,7 +65,7 @@ public class RecipeManagementController {
             @ApiResponse(responseCode = "404", description = "Recipe not found")
     })
     @PutMapping(path = "/recipe/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<RecipeDetails> updateRecipe(@PathVariable("id") Long id, @NotNull @RequestBody final RecipeDetails newRecipeDetails) {
+    public ResponseEntity<RecipeDetails> updateRecipe(@NotNull(message = "RecipeId is missing") @PathVariable("id") Long id, @Valid @RequestBody final RecipeDetails newRecipeDetails) {
         RecipeDetails recipeDetails = recipeManagementService.updateRecipe(id, newRecipeDetails);
         return new ResponseEntity<>(recipeDetails, HttpStatus.OK);
     }
@@ -111,7 +110,7 @@ public class RecipeManagementController {
     @Operation(summary = "Delete a recipe", description = "Removes a recipe from the system.")
     @ApiResponse(responseCode = "204", description = "Recipe deleted successfully")
     @DeleteMapping(path = "/recipe/{recipeId}", produces = "application/json")
-    public ResponseEntity deleteRecipe(@NonNull @PathVariable("recipeId") final Long recipeId) {
+    public ResponseEntity deleteRecipe(@NotNull(message="Recipe Id is missing") @PathVariable("recipeId") final Long recipeId) {
         recipeManagementService.deleteRecipe(recipeId);
         return new ResponseEntity<>("Recipe deleted successfully", HttpStatus.NO_CONTENT);
     }
@@ -121,7 +120,7 @@ public class RecipeManagementController {
     @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully based on the criteria",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = RecipeDetails.class)))
     @PostMapping(path = "/recipe/search", produces = "application/json")
-    public ResponseEntity<List<RecipeDetails>> filterRecipes(@RequestBody @NonNull final RecipeFilterRequest recipeFilterRequest) {
+    public ResponseEntity<List<RecipeDetails>> filterRecipes(@RequestBody @Valid final RecipeFilterRequest recipeFilterRequest) {
         List<RecipeDetails> recipes = recipeManagementService.filterRecipes(recipeFilterRequest);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
